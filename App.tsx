@@ -29,6 +29,7 @@ const App: React.FC = () => {
     const [faceSwapResultImage, setFaceSwapResultImage] = useState<string | null>(null);
     const [isSplitViewActive, setIsSplitViewActive] = useState<boolean>(false);
     const [selectedStyle, setSelectedStyle] = useState<string>(ART_STYLES[0]);
+    const [downloadFormat, setDownloadFormat] = useState<'png' | 'jpeg'>('png');
     
     const { currentImage, addImage, undo, redo, canUndo, canRedo } = useImageHistory();
 
@@ -237,6 +238,8 @@ const App: React.FC = () => {
                       isSplitViewActive={isSplitViewActive}
                       selectedStyle={selectedStyle}
                       setSelectedStyle={setSelectedStyle}
+                      downloadFormat={downloadFormat}
+                      setDownloadFormat={setDownloadFormat}
                       currentImage={currentImage}
                       canUndo={canUndo}
                       canRedo={canRedo}

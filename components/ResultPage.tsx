@@ -18,6 +18,8 @@ interface ResultPageProps {
     isSplitViewActive: boolean;
     selectedStyle: string;
     setSelectedStyle: (style: string) => void;
+    downloadFormat: 'png' | 'jpeg';
+    setDownloadFormat: (format: 'png' | 'jpeg') => void;
     currentImage: string | null;
     canUndo: boolean;
     canRedo: boolean;
@@ -38,7 +40,8 @@ const ResultPage: React.FC<ResultPageProps> = (props) => {
     const {
         mode, setMode, editPrompt, setEditPrompt, isLoading, error, promptHistory,
         sourceFaceImage, setSourceFaceImage, faceSwapResultImage, isSplitViewActive,
-        selectedStyle, setSelectedStyle, currentImage, canUndo, canRedo, undo, redo,
+        selectedStyle, setSelectedStyle, downloadFormat, setDownloadFormat,
+        currentImage, canUndo, canRedo, undo, redo,
         handleEdit, handleUpscale, handleStyleTransfer, handleFaceReplace,
         handleAcceptFaceSwap, handleDiscardFaceSwap, handleFileUpload, handleFaceUpload,
         handleGoToPrompt
@@ -48,14 +51,34 @@ const ResultPage: React.FC<ResultPageProps> = (props) => {
     const faceInputRef = useRef<HTMLInputElement>(null);
 
     const handleDownload = () => {
-        if (currentImage) {
+        if (!currentImage) return;
+
+        const image = new Image();
+        image.crossOrigin = 'anonymous'; 
+        image.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            
+            if (downloadFormat === 'jpeg') {
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            ctx.drawImage(image, 0, 0);
+
+            const dataUrl = canvas.toDataURL(`image/${downloadFormat}`);
+            
             const link = document.createElement('a');
-            link.href = currentImage;
-            link.download = `imaginify-${Date.now()}.png`;
+            link.href = dataUrl;
+            link.download = `imaginify-${Date.now()}.${downloadFormat}`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-        }
+        };
+        image.src = currentImage;
     };
     
     const ControlButton = ({ icon, label, onClick, disabled = false, className = "" }: { icon?: React.ReactNode, label: string, onClick: () => void, disabled?: boolean, className?: string }) => (
@@ -107,9 +130,17 @@ const ResultPage: React.FC<ResultPageProps> = (props) => {
                     </div>
                 ) : currentImage ? (
                     <img src={currentImage} alt="Generated or edited art" className="max-w-full max-h-full object-contain" />
+                ) : error ? (
+                    <div className="text-center text-red-400 p-8 flex flex-col items-center justify-center">
+                        <h3 className="text-2xl font-orbitron mb-2">Action Failed</h3>
+                        <p className="text-gray-300 max-w-md">{error}</p>
+                        <button onClick={handleGoToPrompt} className="mt-6 px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold transition-all duration-300 ease-in-out transform hover:scale-105 btn-glow">
+                            Try Again
+                        </button>
+                    </div>
                 ) : (
-                     <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
-                        <LoadingSpinner />
+                     <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 text-gray-500">
+                        <p>No image to display.</p>
                     </div>
                 )}
             </div>
@@ -193,7 +224,19 @@ const ResultPage: React.FC<ResultPageProps> = (props) => {
                         <HistoryButton icon={<RedoIcon className="w-5 h-5"/>} onClick={redo} disabled={!canRedo} />
                     </div>
                     <ControlButton icon={<UpscaleIcon className="w-5 h-5"/>} label="Upscale" onClick={handleUpscale} disabled={!currentImage}/>
-                    <ControlButton icon={<DownloadIcon className="w-5 h-5"/>} label="Download" onClick={handleDownload} disabled={!currentImage}/>
+                    <div className="flex items-stretch">
+                        <ControlButton icon={<DownloadIcon className="w-5 h-5"/>} label="Download" onClick={handleDownload} disabled={!currentImage} className="rounded-r-none !flex-grow-0"/>
+                         <select
+                            value={downloadFormat}
+                            onChange={(e) => setDownloadFormat(e.target.value as 'png' | 'jpeg')}
+                            disabled={!currentImage || isLoading}
+                            className="bg-purple-600 text-white font-bold p-3 rounded-lg rounded-l-none border-l-2 border-blue-400 focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all appearance-none disabled:opacity-50"
+                            aria-label="Select download format"
+                        >
+                            <option value="png">PNG</option>
+                            <option value="jpeg">JPEG</option>
+                        </select>
+                    </div>
                 </div>
                 
                 {error && <div className="text-sm text-red-400 bg-red-900/50 p-3 rounded-lg border border-red-500/50">{error}</div>}

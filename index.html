@@ -86,6 +86,17 @@
       .blinking-cursor {
         animation: blink 1s step-end infinite;
       }
+
+      /* NEW LOADING SPINNER STYLES */
+      @keyframes cyber-spin {
+        100% { transform: rotate(360deg); }
+      }
+      .cyber-loader div {
+        position: absolute;
+        border-radius: 50%;
+        animation: cyber-spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        box-sizing: border-box; /* Ensure border is included in size */
+      }
     </style>
   <script type="importmap">
 {
