@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Imaginify AI – Create, Edit & Reface with Intelligence.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+      body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #0a0a1a;
+        color: #e0e0e0;
+        overflow: hidden;
+      }
+      .font-orbitron {
+        font-family: 'Orbitron', sans-serif;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-image: linear-gradient(to bottom right, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05)) 1;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      }
+      .neon-glow {
+        box-shadow: 0 0 5px rgba(77, 145, 255, 0.6), 0 0 10px rgba(77, 145, 255, 0.4), 0 0 15px rgba(128, 0, 128, 0.3);
+      }
+      .neon-text {
+         text-shadow: 0 0 5px rgba(77, 145, 255, 0.8), 0 0 10px rgba(77, 145, 255, 0.6);
+      }
+      
+      @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 0 8px rgba(192, 132, 252, 0.7), 0 0 16px rgba(128, 0, 128, 0.5); }
+        50% { box-shadow: 0 0 16px rgba(192, 132, 252, 1), 0 0 30px rgba(128, 0, 128, 0.8); }
+      }
+
+      .btn-glow:hover:not(:disabled) {
+        animation: pulse-glow 1.5s infinite ease-in-out;
+      }
+      
+      /* Floating Label Styles */
+      .floating-label-group {
+        position: relative;
+      }
+      .floating-label {
+        position: absolute;
+        top: 0.85rem;
+        left: 0.75rem;
+        padding: 0 0.25rem;
+        color: #9ca3af; /* gray-400 */
+        pointer-events: none;
+        transition: all 0.2s ease-out;
+        transform-origin: top left;
+        background-color: transparent; /* Fix for label background on transition */
+      }
+      .floating-input:focus ~ .floating-label,
+      .floating-input:not(:placeholder-shown) ~ .floating-label {
+        transform: translateY(-1.5rem) scale(0.8);
+        color: #60a5fa; /* blue-400 */
+        background-color: #111122; /* A slightly lighter shade of body bg */
+      }
+      .floating-input-edit:focus ~ .floating-label {
+        color: #c084fc; /* purple-400 */
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(77, 145, 255, 0.5);
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(77, 145, 255, 0.8);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.25.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
