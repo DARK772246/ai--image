@@ -108,6 +108,44 @@ export const upscaleImage = async (base64ImageData: string): Promise<string> => 
     throw new Error("Image upscaling failed or returned no images.");
 };
 
+export const applyStyleTransfer = async (base64ImageData: string, style: string): Promise<string> => {
+    const ai = getAiClient();
+    
+    const pureBase64 = getBase64FromDataUrl(base64ImageData);
+    const mimeType = getMimeTypeFromDataUrl(base64ImageData);
+
+    const prompt = `Apply the artistic style of "${style}" to the following image. The core subject, composition, and elements of the image should remain the same, but the entire visual aesthetic, including colors, textures, and brushwork, should be transformed to match the chosen style.`;
+
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-image',
+        contents: {
+            parts: [
+                {
+                    inlineData: {
+                        data: pureBase64,
+                        mimeType: mimeType,
+                    },
+                },
+                {
+                    text: prompt,
+                },
+            ],
+        },
+        config: {
+            responseModalities: [Modality.IMAGE],
+        },
+    });
+
+    for (const part of response.candidates[0].content.parts) {
+        if (part.inlineData) {
+            const base64ImageBytes: string = part.inlineData.data;
+            return `data:image/png;base64,${base64ImageBytes}`;
+        }
+    }
+
+    throw new Error("Style transfer failed or returned no images.");
+};
+
 export const replaceFace = async (targetImage: string, sourceFaceImage: string): Promise<string> => {
     const ai = getAiClient();
     

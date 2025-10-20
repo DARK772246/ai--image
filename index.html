@@ -41,7 +41,6 @@
         animation: pulse-glow 1.5s infinite ease-in-out;
       }
       
-      /* Floating Label Styles */
       .floating-label-group {
         position: relative;
       }
@@ -50,20 +49,20 @@
         top: 0.85rem;
         left: 0.75rem;
         padding: 0 0.25rem;
-        color: #9ca3af; /* gray-400 */
+        color: #9ca3af;
         pointer-events: none;
         transition: all 0.2s ease-out;
         transform-origin: top left;
-        background-color: transparent; /* Fix for label background on transition */
+        background-color: transparent;
       }
       .floating-input:focus ~ .floating-label,
       .floating-input:not(:placeholder-shown) ~ .floating-label {
         transform: translateY(-1.5rem) scale(0.8);
-        color: #60a5fa; /* blue-400 */
-        background-color: #111122; /* A slightly lighter shade of body bg */
+        color: #60a5fa;
+        background-color: #111122;
       }
-      .floating-input-edit:focus ~ .floating-label {
-        color: #c084fc; /* purple-400 */
+       .floating-input-edit:focus ~ .floating-label {
+        color: #c084fc;
       }
 
       ::-webkit-scrollbar {
@@ -79,6 +78,13 @@
       }
       ::-webkit-scrollbar-thumb:hover {
         background: rgba(77, 145, 255, 0.8);
+      }
+
+      @keyframes blink {
+        50% { opacity: 0; }
+      }
+      .blinking-cursor {
+        animation: blink 1s step-end infinite;
       }
     </style>
   <script type="importmap">
